@@ -1,0 +1,69 @@
+#GRIP_TASK_1_SUDHANSHU_RANJAN_PRIYADARSHI_Using_Pycharm
+import pandas as pd
+import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore')
+
+#Reading CSV File
+df = pd.read_csv('data.csv')
+df.head()
+df.describe()
+df.info()
+
+df.plot()
+plt.title('Hours vs percentage')
+plt.xlabel('Hours studied')
+plt.ylabel('Percentage score')
+plt.show()
+
+#correlation is useful for getting the relationship between attributes
+df.corr()
+
+
+X = df.iloc[:, :-1]
+y = df.iloc[:, -1]
+
+#Splitting testing and training data
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2, random_state=0)
+
+#Training the linear regression model
+from sklearn.linear_model import LinearRegression
+reg = LinearRegression()
+reg.fit(X_train, y_train)
+alg = LinearRegression()
+alg.fit(X_train, y_train)
+y_pred = reg.predict(X_test)
+
+#Plotting the graph
+plt.scatter(X_train, y_train, color='blue')
+plt.plot(X_train, reg.predict(X_train), color='green')
+plt.title('Hours vs Scores(Training set)')
+plt.xlabel('Hours')
+plt.ylabel('Scores')
+plt.show()
+
+#Visualising the test set result
+plt.scatter(X_test, y_test, color='blue')
+plt.plot(X_train, reg.predict(X_train), color='green')
+plt.title('Hours vs Scores(Testing set)')
+plt.xlabel('Hours')
+plt.ylabel('Scores')
+plt.show()
+pred = alg.predict(X_test)
+pd.DataFrame({'ACTUAL_VALUE': y_test, 'PREDECTED_VALUE': pred})
+
+h = 9.25
+a = alg.predict([[h]])
+print('if student studies for {} hours per day he/she is likely to score{} %'.format(h, *a))
+
+#Checking the r2 score and mean absolute error
+from sklearn import metrics
+print('Mean Absolute Error:', metrics.mean_squared_error(y_test, y_pred))
+
+#Checking the accuracy of the model
+from sklearn.metrics import r2_score
+r2_score(y_test, y_pred)
+
+
+
